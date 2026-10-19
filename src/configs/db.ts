@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
-import * as schema from '../db/schema'; // Thư mục chứa schema được sinh từ bước pull
+import * as schema from '../db/drizzle/schema'; // Thư mục chứa schema được sinh từ bước pull
 
 dotenv.config();
 

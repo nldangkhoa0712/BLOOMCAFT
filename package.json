@@ -10,7 +10,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts"
+    "dev": "nodemon --watch src/**/*.ts --exec ts-node src/server.ts"
   },
   "keywords": [],
   "author": "",
