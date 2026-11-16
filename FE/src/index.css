@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bloom-50: #fff8f3;
+  --color-bloom-100: #fcebdc;
+  --color-bloom-500: #bc6c50;
+  --color-bloom-700: #7f4433;
+  --color-leaf-600: #3f6b4f;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  min-width: 320px;
+  background: var(--color-bloom-50);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: #2d2825;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  background: var(--color-bloom-100);
+  color: var(--color-bloom-700);
+}

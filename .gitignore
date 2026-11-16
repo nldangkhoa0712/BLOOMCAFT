@@ -1,0 +1,3 @@
+# Repository-local documentation is not versioned, except README files.
+*.md
+!README.md
