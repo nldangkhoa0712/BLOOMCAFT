@@ -2,14 +2,21 @@
   "name": "bloomcraft",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
+  "packageManager": "pnpm@9.15.1",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "prisma skills sync || exit 0",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "typecheck:test": "tsc --noEmit -p tsconfig.test.json",
+    "test": "vitest run --exclude tests/integration/**",
+    "test:integration": "vitest run tests/integration",
+    "test:all": "vitest run",
+    "start": "node dist/server.js",
     "db:pull": "drizzle-kit pull",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
+    "db:check-roles": "node scripts/check-required-roles.cjs",
     "dev": "nodemon --watch src/**/*.ts --exec ts-node src/server.ts"
   },
   "keywords": [],
@@ -17,12 +24,12 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@prisma/orm-postgres": "^8.0.0-rc.18",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^18.0.8",
     "drizzle-orm": "^0.45.4",
     "express": "^5.3.0",
+    "express-rate-limit": "^8.7.4",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.12.1",
@@ -37,9 +44,12 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^26.6.5",
     "@types/pg": "^8.23.1",
+    "@types/supertest": "^7.2.1",
     "drizzle-kit": "^0.31.11",
     "nodemon": "^3.1.14",
+    "supertest": "^7.3.2",
     "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^5.1.1"
   }
 }
