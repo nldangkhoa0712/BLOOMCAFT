@@ -1,31 +1,66 @@
+@import "@fontsource/playfair-display/latin-400.css";
+@import "@fontsource/playfair-display/vietnamese-400.css";
+@import "@fontsource/playfair-display/latin-600.css";
+@import "@fontsource/playfair-display/vietnamese-600.css";
+@import "@fontsource/be-vietnam-pro/latin-400.css";
+@import "@fontsource/be-vietnam-pro/vietnamese-400.css";
+@import "@fontsource/be-vietnam-pro/latin-500.css";
+@import "@fontsource/be-vietnam-pro/vietnamese-500.css";
+@import "@fontsource/be-vietnam-pro/latin-600.css";
+@import "@fontsource/be-vietnam-pro/vietnamese-600.css";
 @import "tailwindcss";
 
-@theme {
-  --color-bloom-50: #fff8f3;
-  --color-bloom-100: #fcebdc;
-  --color-bloom-500: #bc6c50;
-  --color-bloom-700: #7f4433;
-  --color-leaf-600: #3f6b4f;
-  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+@theme inline {
+  --color-background-main: var(--chakra-colors-background-main);
+  --color-background-secondary: var(--chakra-colors-background-secondary);
+  --color-surface-card: var(--chakra-colors-surface-card);
+  --color-primary-main: var(--chakra-colors-primary-main);
+  --color-primary-soft: var(--chakra-colors-primary-soft);
+  --color-primary-on-soft: var(--chakra-colors-primary-on-soft);
+  --color-text-heading: var(--chakra-colors-text-heading);
+  --color-text-body: var(--chakra-colors-text-body);
+  --color-text-muted: var(--chakra-colors-text-muted);
+  --color-border-default: var(--chakra-colors-border-default);
+  --color-accent-sage: var(--chakra-colors-accent-sage);
+  --color-accent-on-sage: var(--chakra-colors-accent-on-sage);
+  --color-accent-lavender: var(--chakra-colors-accent-lavender);
+  --color-accent-peach: var(--chakra-colors-accent-peach);
+  --color-accent-on-peach: var(--chakra-colors-accent-on-peach);
+  --font-heading: var(--chakra-fonts-heading);
+  --font-sans: var(--chakra-fonts-body);
 }
 
 html {
   min-width: 320px;
-  background: var(--color-bloom-50);
+  color-scheme: light dark;
+  background: light-dark(#fffaf5, #211b24);
 }
 
 body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  color: #2d2825;
+  background: var(
+    --chakra-colors-background-main,
+    light-dark(#fffaf5, #211b24)
+  );
+  color: var(
+    --chakra-colors-text-body,
+    light-dark(#393438, #e1d5dc)
+  );
 }
 
 #root {
   min-height: 100vh;
 }
 
-::selection {
-  background: var(--color-bloom-100);
-  color: var(--color-bloom-700);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
