@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { getEnv } from './configs/env';
 import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
+import { catalogRoutes } from './modules/catalog/catalog.routes';
 import { identityRoutes } from './modules/identity/identity.routes';
 
 const env = getEnv();
@@ -26,6 +27,7 @@ app.get('/health', (_request, response) => {
 });
 
 app.use('/api/v1/identity', identityRoutes);
+app.use('/api/v1/catalog', catalogRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
