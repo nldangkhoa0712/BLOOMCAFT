@@ -4,8 +4,11 @@ import { RouterProvider } from 'react-router-dom'
 
 import { AppProviders } from '@/app/providers/AppProviders'
 import { router } from '@/app/router/router'
+import { setupApiInterceptors } from '@/app/store/setupApiInterceptors'
 
 import './index.css'
+
+setupApiInterceptors()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

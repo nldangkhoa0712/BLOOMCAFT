@@ -8,6 +8,7 @@ interface PasswordFieldProps {
   id: string
   label: string
   onFocus?: () => void
+  onValueChange?: () => void
   placeholder?: string
   registration: UseFormRegisterReturn
 }
@@ -36,11 +37,13 @@ export function PasswordField({
   id,
   label,
   onFocus,
+  onValueChange,
   placeholder,
   registration,
 }: PasswordFieldProps) {
   const [isVisible, setIsVisible] = useState(false)
   const errorId = error ? `${id}-error` : undefined
+  const { onChange, ...registrationProps } = registration
 
   return (
     <Field.Root invalid={Boolean(error)}>
@@ -49,12 +52,16 @@ export function PasswordField({
       </Field.Label>
       <Box position="relative" width="full">
         <Input
-          {...registration}
+          {...registrationProps}
           aria-describedby={errorId}
           autoComplete={autoComplete}
           bg="surface.card"
           borderColor="border.default"
           id={id}
+          onChange={(event) => {
+            onValueChange?.()
+            void onChange(event)
+          }}
           onFocus={onFocus}
           pe="12"
           placeholder={placeholder}

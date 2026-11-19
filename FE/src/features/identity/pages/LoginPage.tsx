@@ -1,17 +1,31 @@
 import { Text } from '@chakra-ui/react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import { AuthLayout } from '@/features/identity/components/AuthLayout'
 import { LoginForm } from '@/features/identity/components/LoginForm'
+import { useLoginMutation } from '@/features/identity/hooks/useLoginMutation'
+import type { LoginFormValues } from '@/features/identity/schemas/identitySchemas'
 
 interface LoginLocationState {
   email?: string
   registrationSucceeded?: boolean
+  returnTo?: string
 }
 
 export function LoginPage() {
   const location = useLocation()
+  const navigate = useNavigate()
+  const loginMutation = useLoginMutation()
   const state = location.state as LoginLocationState | null
+  const returnTo =
+    state?.returnTo?.startsWith('/') && !state.returnTo.startsWith('//')
+      ? state.returnTo
+      : '/'
+
+  const handleLogin = async (values: LoginFormValues) => {
+    await loginMutation.mutateAsync(values)
+    navigate(returnTo, { replace: true })
+  }
 
   return (
     <AuthLayout
@@ -41,7 +55,7 @@ export function LoginPage() {
           Tạo tài khoản thành công. Bạn có thể đăng nhập ngay.
         </Text>
       ) : null}
-      <LoginForm defaultEmail={state?.email} />
+      <LoginForm defaultEmail={state?.email} onSubmit={handleLogin} />
     </AuthLayout>
   )
 }

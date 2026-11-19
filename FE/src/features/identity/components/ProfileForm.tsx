@@ -1,10 +1,13 @@
 import { Avatar, Button, Field, HStack, Input, Text, VStack } from '@chakra-ui/react'
+import { useState } from 'react'
 
+import { FormErrorAlert } from '@/features/identity/components/FormErrorAlert'
 import {
   type ProfileFormValues,
   profileSchema,
 } from '@/features/identity/schemas/identitySchemas'
 import { useForm, zodResolver } from '@/shared/forms/schema'
+import { normalizeApiError } from '@/shared/api/errors'
 import { PrimaryButton } from '@/shared/ui/PrimaryButton'
 
 interface ProfileFormProps {
@@ -22,11 +25,15 @@ export function ProfileForm({
   isSubmitting = false,
   onSubmit,
 }: ProfileFormProps) {
+  const [formError, setFormError] = useState<string | null>(null)
+  const [showSuccess, setShowSuccess] = useState(false)
   const {
+    clearErrors,
     formState: { errors, isDirty, isSubmitting: isFormSubmitting },
     handleSubmit,
     register,
     reset,
+    setError,
   } = useForm<ProfileFormValues>({
     defaultValues,
     mode: 'onBlur',
@@ -34,10 +41,45 @@ export function ProfileForm({
     resolver: zodResolver(profileSchema),
   })
   const submitting = isSubmitting || isFormSubmitting
+  const fullNameRegistration = register('fullName')
+  const phoneRegistration = register('phone')
+
+  const submit = async (values: ProfileFormValues) => {
+    setFormError(null)
+    setShowSuccess(false)
+    clearErrors()
+
+    try {
+      await onSubmit?.(values)
+      reset(values)
+      setShowSuccess(true)
+    } catch (error) {
+      const apiError = normalizeApiError(error)
+      const fullNameError = apiError.fieldIssues?.fullName
+      const phoneError = apiError.fieldIssues?.phone
+      if (fullNameError) setError('fullName', { message: fullNameError, type: 'server' })
+      if (phoneError) setError('phone', { message: phoneError, type: 'server' })
+      if (fullNameError || phoneError) return
+      setFormError(apiError.message)
+    }
+  }
 
   return (
-    <form noValidate onSubmit={handleSubmit(async (values) => onSubmit?.(values))}>
+    <form noValidate onSubmit={handleSubmit(submit)}>
       <VStack align="stretch" gap="6">
+        {formError ? <FormErrorAlert message={formError} /> : null}
+        {showSuccess ? (
+          <Text
+            aria-live="polite"
+            bg="accent.sage"
+            borderRadius="lg"
+            color="accent.onSage"
+            fontSize="sm"
+            p="3"
+          >
+            Thông tin tài khoản đã được cập nhật.
+          </Text>
+        ) : null}
         <HStack gap="4">
           <Avatar.Root bg="primary.soft" color="primary.onSoft" size="xl">
             <Avatar.Fallback name={defaultValues.fullName} />
@@ -73,12 +115,18 @@ export function ProfileForm({
             Họ và tên
           </Field.Label>
           <Input
-            {...register('fullName')}
+            {...fullNameRegistration}
             aria-describedby={errors.fullName ? 'profile-name-error' : undefined}
             autoComplete="name"
             bg="surface.card"
             borderColor="border.default"
             id="profile-name"
+            onChange={(event) => {
+              setFormError(null)
+              setShowSuccess(false)
+              if (errors.fullName?.type === 'server') clearErrors('fullName')
+              void fullNameRegistration.onChange(event)
+            }}
             _invalid={{ borderColor: 'primary.main' }}
           />
           {errors.fullName ? (
@@ -91,13 +139,19 @@ export function ProfileForm({
             Số điện thoại <Field.RequiredIndicator fallback="(không bắt buộc)" />
           </Field.Label>
           <Input
-            {...register('phone')}
+            {...phoneRegistration}
             aria-describedby={errors.phone ? 'profile-phone-error' : undefined}
             autoComplete="tel"
             bg="surface.card"
             borderColor="border.default"
             id="profile-phone"
             inputMode="tel"
+            onChange={(event) => {
+              setFormError(null)
+              setShowSuccess(false)
+              if (errors.phone?.type === 'server') clearErrors('phone')
+              void phoneRegistration.onChange(event)
+            }}
             placeholder="090 123 4567"
             type="tel"
             _invalid={{ borderColor: 'primary.main' }}
